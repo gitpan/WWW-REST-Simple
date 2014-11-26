@@ -10,7 +10,7 @@ use utf8;
 use base 'Exporter';
 our @EXPORT = qw/get post/;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 sub get {
   die "At least an url is needed!" if @_ < 1;
@@ -48,7 +48,7 @@ WWW::REST::Simple - Just provides two most frequently used http methods: GET and
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -62,20 +62,20 @@ version 0.001
     # GET some url like 'http://www.example.com/?param_x=1&param_y=2
     my $content = get('http://www.example.com/', $args);
 
-    # or by POST:
+    # or by POST, here we just take args as form data
     my $content = post('http://www.example.com/', $args);
 
 =head1 EXPORTS
 
 Exports the C<get> and C<post> functions.
 
-No prividing of other methods like DELETE, PUT etc.
+No other methods like DELETE, PUT etc. provided.
 
-No header can be passed by.
+No any header can be passed by.
 
 So if you need more powerful one, go to L<WWW::REST> or L<REST::Client>, or just search the keyword 'REST' in CPAN.
 
-Call it Simple it's really simple ;)
+Call it Simple it's really simple ; )
 
 =head1 AUTHOR
 
