@@ -6,5 +6,5 @@ Makefile.PL
 README
 dist.ini
 lib/WWW/REST/Simple.pm
-t/release-eol.t
-t/simple.t
+t/test_use.t
+xx.pl

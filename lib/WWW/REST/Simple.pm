@@ -2,23 +2,25 @@ use strict;
 use warnings;
 package WWW::REST::Simple;
 use LWP::UserAgent;
+use LWP::Protocol::https;
+use HTTP::Request::Common;
 use URI;
 use utf8;
 
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: Just provides GET and POST http methods
 
 use base 'Exporter';
 our @EXPORT = qw/get post/;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 sub get {
-  die "At least an url is needed!" if @_ < 1;
+  die "At least a url is needed!" if @_ < 1;
   _send_request('GET', @_);
 }
 
 sub post {
-  die "At least an url is needed!" if @_ < 1;
+  die "At least a url is needed!" if @_ < 1;
   _send_request('POST', @_);
 }
 
@@ -27,10 +29,17 @@ sub _send_request {
   my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 1 });
   $ua->timeout(20);
   $url = URI->new($url);
-  $url->query_form(%$args) if $method eq 'GET';
-  my $request = new HTTP::Request( $method => $url );
-  $request->content($args) if $method eq 'POST';
-  my $resp = $ua->request( $request );
+
+  my $resp = do {
+    if ($method eq 'GET') {
+      $url->query_form(%$args);
+      $ua->request( GET $url );
+    }
+    else {
+      $ua->request( POST $url, $args );
+    }
+  };
+
   $resp->is_success ? $resp->content : $resp->status_line;
 }
 
