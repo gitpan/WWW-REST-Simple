@@ -7,12 +7,12 @@ use HTTP::Request::Common;
 use URI;
 use utf8;
 
-# ABSTRACT: Just provides GET and POST http methods
+# ABSTRACT: Just provides GET and POST http method
 
 use base 'Exporter';
 our @EXPORT = qw/get post/;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 sub get {
   die "At least a url is needed!" if @_ < 1;
@@ -25,18 +25,20 @@ sub post {
 }
 
 sub _send_request {
-  my ($method, $url, $args) = @_;
+  my ($method, $url, $args, $header) = @_;
+  $args ||= {};
+  $header ||= {};
   my $ua = LWP::UserAgent->new(ssl_opts => { verify_hostname => 1 });
-  $ua->timeout(20);
+  $ua->timeout(10);
   $url = URI->new($url);
 
   my $resp = do {
     if ($method eq 'GET') {
       $url->query_form(%$args);
-      $ua->request( GET $url );
+      $ua->request( GET $url, %$header);
     }
     else {
-      $ua->request( POST $url, $args );
+      $ua->request( POST $url, %$header, Content => $args );
     }
   };
 
@@ -55,10 +57,6 @@ __END__
 
 WWW::REST::Simple - Just provides two most frequently used http methods: GET and POST
 
-=head1 VERSION
-
-version 0.002
-
 =head1 SYNOPSIS
 
     use WWW::REST::Simple qw/get post/;
@@ -66,23 +64,26 @@ version 0.002
     # just GET a url
     my $content = get('http://www.example.com/?param_x=1');
 
-    my $args = { param_x => 1, param_y => 2 };
+    my $params = { param_x => 1, param_y => 2 };
 
     # GET some url like 'http://www.example.com/?param_x=1&param_y=2
-    my $content = get('http://www.example.com/', $args);
+    my $content = get('http://www.example.com/', $params);
 
-    # or by POST, here we just take args as form data
-    my $content = post('http://www.example.com/', $args);
+    # or by POST, here we just take params as form data
+    my $content = post('http://www.example.com/', $params);
 
 =head1 EXPORTS
 
-Exports the C<get> and C<post> functions.
+Exports the C<get> and C<post> functions, so be careful with namespace collision :(
+
+Except for the params, you can send request with a customized headers. Both of params and headers are hash references.
+
+get($url, $a_hash_ref_params, $a_hash_ref_headers);
+post($url, $a_hash_ref_params, $a_hash_ref_headers);
 
 No other methods like DELETE, PUT etc. provided.
 
-No any header can be passed by.
-
-So if you need more powerful one, go to L<WWW::REST> or L<REST::Client>, or just search the keyword 'REST' in CPAN.
+So if you need more powerful one, go to L<WWW::REST> or L<REST::Client>.
 
 Call it Simple it's really simple ; )
 

@@ -1,5 +1,5 @@
 ---
-abstract: 'Just provides GET and POST http methods'
+abstract: 'Just provides GET and POST http method'
 author:
   - 'Bin Joy <perlxruby@gmail.com>'
 build_requires: {}
@@ -12,4 +12,4 @@ meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: '1.4'
 name: WWW-REST-Simple
-version: '0.003'
+version: '0.004'

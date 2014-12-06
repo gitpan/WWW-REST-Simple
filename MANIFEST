@@ -7,4 +7,3 @@ README
 dist.ini
 lib/WWW/REST/Simple.pm
 t/test_use.t
-xx.pl
